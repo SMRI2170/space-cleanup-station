@@ -33,3 +33,11 @@ Three.jsは現在CDNから読み込んでいるため、起動時にインター
 - `sw.js`: PWAキャッシュ設定
 - `icon.svg`: アプリアイコン
 - `TASKS.md`: 開発タスクと優先順位
+- `DEVELOPMENT_LOOP.md`: 1件ずつ完成させる開発ルール
+- `GAMEPLAY_LOOP.md`: 5分プレイのゲームループ仕様
+
+## Development
+
+開発はGitHub Issuesの小タスクを1件ずつ進めます。実装、チェック、スマホでの5分プレイ、結果の記録まで終えてから次のタスクへ進みます。
+
+詳細は[`DEVELOPMENT_LOOP.md`](DEVELOPMENT_LOOP.md)を参照してください。
