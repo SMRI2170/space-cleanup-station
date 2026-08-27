@@ -716,6 +716,7 @@ const CONTRACTS = [
 let contractIndex = 0;
 let activeContract = null;
 let contractChoices = [];
+let contractResult = null;
 
 function getDebrisLabel(name) {
   const type = DEBRIS_TYPES.find(item => item.name === name);
@@ -724,15 +725,18 @@ function getDebrisLabel(name) {
 
 function openContractSelection() {
   activeContract = null;
+  contractResult = null;
   const offset = contractIndex % CONTRACTS.length;
   contractChoices = [0, 1, 2].map(index => ({ ...CONTRACTS[(offset + index) % CONTRACTS.length] }));
   contractIndex++;
   renderContractChoices();
+  renderContractResult();
 }
 
 function renderContractChoices() {
   if (!contractChoicesEl) return;
   contractChoicesEl.innerHTML = '';
+  contractChoicesEl.style.display = contractChoices.length > 0 ? 'flex' : 'none';
   contractChoices.forEach((choice, index) => {
     const button = document.createElement('button');
     button.className = 'contract-choice';
@@ -745,14 +749,55 @@ function renderContractChoices() {
   });
 }
 
+function renderContractResult() {
+  if (!contractResultEl) return;
+  if (!contractResult) {
+    contractResultEl.className = 'contract-result';
+    return;
+  }
+
+  contractResultEl.className = `contract-result visible ${contractResult.success ? 'success' : 'failure'}`;
+  contractResultTitleEl.textContent = contractResult.success ? '✅ 契約達成！' : '⏱ 契約失敗';
+  contractResultDescEl.textContent = contractResult.success
+    ? `+${contractResult.reward}💰を獲得しました`
+    : `${getDebrisLabel(contractResult.contract.type)}があと${contractResult.missing}個必要でした`;
+  btnContractRetry.style.display = contractResult.success ? 'none' : 'block';
+}
+
 function selectContract(index) {
   const choice = contractChoices[index];
   if (!choice || activeContract) return;
   activeContract = { ...choice, progress: 0, timeLeft: choice.time };
+  contractResult = null;
   contractChoices = [];
   renderContractChoices();
+  renderContractResult();
   playUpgradeSound();
   spawnPopup(`📦 ${getDebrisLabel(choice.type)}契約を受注！`, window.innerWidth / 2, window.innerHeight * 0.3, true);
+  updateUI();
+}
+
+function showContractResult(success, contract, reward = 0) {
+  activeContract = null;
+  contractChoices = [];
+  contractResult = {
+    success,
+    contract: { ...contract },
+    reward,
+    missing: Math.max(0, contract.target - contract.progress),
+  };
+  renderContractChoices();
+  renderContractResult();
+  updateUI();
+}
+
+function retryContract() {
+  if (!contractResult || contractResult.success) return;
+  const contract = contractResult.contract;
+  activeContract = { ...contract, progress: 0, timeLeft: contract.time };
+  contractResult = null;
+  renderContractResult();
+  playUpgradeSound();
   updateUI();
 }
 
@@ -972,6 +1017,11 @@ const feverBarEl = document.getElementById('fever-bar');
 const missionDescEl = document.getElementById('mission-desc');
 const contractDescEl = document.getElementById('contract-desc');
 const contractChoicesEl = document.getElementById('contract-choices');
+const contractResultEl = document.getElementById('contract-result');
+const contractResultTitleEl = document.getElementById('contract-result-title');
+const contractResultDescEl = document.getElementById('contract-result-desc');
+const btnContractRetry = document.getElementById('btn-contract-retry');
+const btnContractNext = document.getElementById('btn-contract-next');
 const comboCardEl = document.getElementById('combo-card');
 const comboNumEl = document.getElementById('combo-num');
 const comboMultEl = document.getElementById('combo-mult');
@@ -991,6 +1041,8 @@ function updateUI() {
 
   if (activeContract) {
     contractDescEl.textContent = `${getDebrisLabel(activeContract.type)}を${activeContract.target}個回収 (${activeContract.progress}/${activeContract.target}) 残り${Math.ceil(activeContract.timeLeft)}秒`;
+  } else if (contractResult) {
+    contractDescEl.textContent = contractResult.success ? '契約達成。次の契約を選択' : '契約失敗。再挑戦または別契約を選択';
   } else {
     contractDescEl.textContent = '契約を1つ選んで回収を開始';
   }
@@ -1102,6 +1154,17 @@ btnAuto.addEventListener('click', (e) => {
   updateUI();
 });
 
+btnContractRetry.addEventListener('click', (e) => {
+  e.stopPropagation();
+  retryContract();
+});
+
+btnContractNext.addEventListener('click', (e) => {
+  e.stopPropagation();
+  openContractSelection();
+  updateUI();
+});
+
 btnPulse.addEventListener('click', (e) => {
   e.stopPropagation();
   initAudio();
@@ -1209,10 +1272,11 @@ function depositDebris(sourceList, fromPlayer = false) {
     }
 
     if (activeContract && activeContract.progress >= activeContract.target) {
-      GAME_STATE.credits += activeContract.reward;
-      totalEarnedInSec += activeContract.reward;
-      spawnPopup(`📦 契約達成! +${activeContract.reward} 💰`, window.innerWidth / 2, window.innerHeight * 0.28, true);
-      openContractSelection();
+      const completedContract = activeContract;
+      GAME_STATE.credits += completedContract.reward;
+      totalEarnedInSec += completedContract.reward;
+      spawnPopup(`📦 契約達成! +${completedContract.reward} 💰`, window.innerWidth / 2, window.innerHeight * 0.28, true);
+      showContractResult(true, completedContract, completedContract.reward);
     }
 
     updateUI();
@@ -1223,7 +1287,10 @@ function depositDebris(sourceList, fromPlayer = false) {
 function runAutoPlayLogic(dt) {
   const maxCap = 3 + (GAME_STATE.capacityLevel - 1) * 3;
 
-  if (!activeContract && contractChoices.length > 0) {
+  if (contractResult) {
+    if (contractResult.success) openContractSelection();
+    else retryContract();
+  } else if (!activeContract && contractChoices.length > 0) {
     selectContract(0);
   }
 
@@ -1312,8 +1379,9 @@ function animate() {
   if (activeContract) {
     activeContract.timeLeft -= dt;
     if (activeContract.timeLeft <= 0) {
-      openContractSelection();
-      spawnPopup('⏱ 契約更新！', window.innerWidth / 2, window.innerHeight * 0.3);
+      const failedContract = activeContract;
+      showContractResult(false, failedContract);
+      spawnPopup('⏱ 契約失敗！再挑戦しよう', window.innerWidth / 2, window.innerHeight * 0.3);
     }
   }
   hudRefreshTimer += dt;

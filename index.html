@@ -237,6 +237,52 @@
       transform: scale(0.97);
       background: rgba(51, 65, 85, 0.95);
     }
+    .contract-result {
+      display: none;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .contract-result.visible {
+      display: block;
+    }
+    .contract-result.success .contract-result-title {
+      color: #4ade80;
+    }
+    .contract-result.failure .contract-result-title {
+      color: #fb923c;
+    }
+    .contract-result-title {
+      font-size: 11px;
+      font-weight: 900;
+    }
+    .contract-result-desc {
+      margin-top: 2px;
+      color: #e2e8f0;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .contract-result-actions {
+      display: flex;
+      gap: 4px;
+      margin-top: 5px;
+    }
+    .contract-result-actions button {
+      flex: 1;
+      padding: 5px 4px;
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.95);
+      color: #f8fafc;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 800;
+      touch-action: manipulation;
+    }
+    .contract-result-actions button:active {
+      transform: scale(0.97);
+    }
 
     .combo-card {
       position: absolute;
@@ -521,6 +567,14 @@
             <div class="contract-title">📦 時間制サルベージ契約</div>
             <div id="contract-desc" class="contract-desc">衛星部品を3個回収 (0/3)</div>
             <div id="contract-choices" class="contract-choices"></div>
+            <div id="contract-result" class="contract-result">
+              <div id="contract-result-title" class="contract-result-title"></div>
+              <div id="contract-result-desc" class="contract-result-desc"></div>
+              <div class="contract-result-actions">
+                <button id="btn-contract-retry" type="button">再挑戦</button>
+                <button id="btn-contract-next" type="button">別契約を選ぶ</button>
+              </div>
+            </div>
           </div>
         </div>
 
