@@ -1,0 +1,20 @@
+{
+  "name": "Space Cleanup Station",
+  "short_name": "Space Cleanup",
+  "description": "宇宙ステーション周辺のデブリを回収して基地を拡張する3Dゲーム",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#010206",
+  "theme_color": "#010206",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

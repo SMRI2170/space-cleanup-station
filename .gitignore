@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+dist/
+build/
+.env
+.env.*
+!.env.example
+*.log
+
+# Native build output
+ios/App/Pods/
+android/.gradle/
+android/app/build/

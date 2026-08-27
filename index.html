@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#010206">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Space Cleanup Station - Ultimate 3D</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #010206;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      touch-action: none;
+    }
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      touch-action: none;
+    }
+
+    /* UI Overlay */
+    #ui-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+      padding-top: max(16px, env(safe-area-inset-top));
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+      z-index: 10;
+    }
+
+    /* Top HUD */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .status-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 10px 14px;
+      border-radius: 18px;
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(56, 189, 248, 0.15);
+      pointer-events: auto;
+      min-width: 145px;
+    }
+    .credits-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .credits-text {
+      font-size: 24px;
+      font-weight: 900;
+      color: #facc15;
+      text-shadow: 0 0 12px rgba(250, 204, 21, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .income-rate {
+      font-size: 11px;
+      font-weight: 800;
+      color: #4ade80;
+      background: rgba(34, 197, 94, 0.2);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+    }
+    .capacity-container {
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+    .capacity-bar-bg {
+      width: 120px;
+      height: 8px;
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 4px;
+      margin-top: 3px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .capacity-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+      box-shadow: 0 0 8px #38bdf8;
+      transition: width 0.15s ease-out;
+    }
+    .capacity-bar-fill.full {
+      background: linear-gradient(90deg, #f87171, #ef4444);
+      box-shadow: 0 0 10px #ef4444;
+    }
+
+    /* Fever Overdrive Gauge */
+    .fever-container {
+      margin-top: 6px;
+      font-size: 11px;
+      font-weight: 900;
+      color: #f97316;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .fever-bar-bg {
+      width: 65px;
+      height: 6px;
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .fever-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f59e0b, #ef4444, #ec4899);
+      box-shadow: 0 0 8px #f59e0b;
+      transition: width 0.2s ease-out;
+    }
+
+    /* Header Right (Missions & Controls) */
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+    .top-controls {
+      display: flex;
+      gap: 6px;
+    }
+    .icon-btn {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      padding: 6px 10px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      pointer-events: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    .mission-card {
+      width: 195px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 8px 12px;
+      border-radius: 16px;
+      color: #fff;
+      box-shadow: 0 6px 24px rgba(56, 189, 248, 0.25);
+      pointer-events: auto;
+    }
+    .mission-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #38bdf8;
+      font-weight: 800;
+    }
+    .mission-desc {
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 2px;
+      color: #f8fafc;
+      line-height: 1.25;
+    }
+    .contract-card {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .contract-title {
+      font-size: 10px;
+      color: #facc15;
+      font-weight: 900;
+    }
+    .contract-desc {
+      font-size: 11px;
+      color: #e2e8f0;
+      font-weight: 700;
+      margin-top: 2px;
+      line-height: 1.25;
+    }
+
+    .combo-card {
+      position: absolute;
+      top: 142px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 7px 14px;
+      border: 1px solid rgba(250, 204, 21, 0.65);
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.78);
+      color: #facc15;
+      font-size: 12px;
+      font-weight: 900;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.55);
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+    }
+    .combo-card.active {
+      opacity: 1;
+      transform: translateX(-50%) scale(1.04);
+    }
+    .combo-time {
+      display: block;
+      color: #f8fafc;
+      font-size: 10px;
+      margin-top: 2px;
+      text-shadow: none;
+    }
+
+    /* Cargo Shuttle Docking Card */
+    #shuttle-card {
+      width: 195px;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+      border: 1px solid #facc15;
+      backdrop-filter: blur(16px);
+      padding: 8px 12px;
+      border-radius: 16px;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
+      pointer-events: auto;
+      display: none;
+      animation: pulseGlow 1.5s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      from { border-color: rgba(250, 204, 21, 0.4); box-shadow: 0 0 8px rgba(250, 204, 21, 0.2); }
+      to { border-color: rgba(250, 204, 21, 1.0); box-shadow: 0 0 20px rgba(250, 204, 21, 0.7); }
+    }
+    .shuttle-title {
+      font-size: 10px;
+      font-weight: 900;
+      color: #facc15;
+    }
+    .shuttle-order {
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 2px;
+      color: #fff;
+    }
+
+    /* Alert Banner */
+    #alert-banner {
+      position: absolute;
+      top: 115px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.95), rgba(249, 115, 22, 0.95));
+      color: #fff;
+      padding: 9px 24px;
+      border-radius: 24px;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 1px;
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.85);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    #alert-banner.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    #alert-banner.fever {
+      background: linear-gradient(90deg, #f59e0b, #ef4444, #ec4899);
+      box-shadow: 0 0 40px rgba(245, 158, 11, 0.95);
+      font-size: 14px;
+    }
+
+    /* Floating Dynamic Joystick */
+    #dynamic-joystick {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(15, 23, 42, 0.4) 100%);
+      border: 2px solid rgba(56, 189, 248, 0.6);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      display: none;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.35);
+    }
+    #dynamic-knob {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      border: 2px solid #fff;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.9);
+    }
+
+    /* Bottom Controls */
+    .bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .touch-hint {
+      background: rgba(15, 23, 42, 0.85);
+      padding: 9px 13px;
+      border-radius: 14px;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      line-height: 1.4;
+    }
+
+    /* Upgrade Panel */
+    .upgrade-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      pointer-events: auto;
+    }
+    .upgrade-btn {
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 8px 12px;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      min-width: 160px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      transition: transform 0.08s ease, background 0.1s ease, border-color 0.2s ease;
+      touch-action: manipulation;
+    }
+    .upgrade-btn:active {
+      transform: scale(0.95);
+      background: #1e293b;
+    }
+    .upgrade-btn.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .upgrade-cost {
+      color: #facc15;
+      font-weight: 900;
+      text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+    }
+
+    /* Floating Reward Popups */
+    .popup-text {
+      position: absolute;
+      color: #facc15;
+      font-weight: 900;
+      font-size: 22px;
+      text-shadow: 0 0 10px rgba(0,0,0,0.9), 0 0 20px #facc15;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      animation: floatUp 0.85s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 999;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translate(-50%, 0) scale(0.7); }
+      50% { transform: translate(-50%, -35px) scale(1.25); }
+      100% { opacity: 0; transform: translate(-50%, -65px) scale(1.0); }
+    }
+
+    @media (max-width: 520px) {
+      #ui-overlay {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+      .status-card {
+        min-width: 126px;
+        padding: 8px 10px;
+      }
+      .credits-text {
+        font-size: 20px;
+      }
+      .capacity-bar-bg {
+        width: 100px;
+      }
+      .mission-card,
+      #shuttle-card {
+        width: 158px;
+        padding: 7px 9px;
+      }
+      .combo-card {
+        top: 150px;
+        font-size: 11px;
+      }
+      .mission-desc,
+      .shuttle-order {
+        font-size: 10px;
+      }
+      .touch-hint {
+        max-width: 155px;
+        padding: 7px 9px;
+        font-size: 10px;
+      }
+      .upgrade-btn {
+        min-width: 140px;
+        padding: 7px 9px;
+        font-size: 10px;
+      }
+      .icon-btn {
+        padding: 5px 7px;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container"></div>
+
+  <!-- Dynamic Floating Joystick -->
+  <div id="dynamic-joystick">
+    <div id="dynamic-knob"></div>
+  </div>
+
+  <div id="ui-overlay">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="status-card">
+        <div class="credits-row">
+          <div class="credits-text">💰 <span id="credits-num">0</span></div>
+          <div id="income-rate" class="income-rate">+0/s</div>
+        </div>
+        <div class="capacity-container">
+          🎒 容量: <span id="capacity-num">0/3</span>
+          <div class="capacity-bar-bg">
+            <div id="capacity-bar" class="capacity-bar-fill"></div>
+          </div>
+        </div>
+        <div class="fever-container">
+          <span>🔥 FEVER:</span>
+          <div class="fever-bar-bg">
+            <div id="fever-bar" class="fever-bar-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="top-controls">
+          <button id="btn-auto" class="icon-btn">🤖 自動: OFF</button>
+          <button id="btn-audio" class="icon-btn">🔊 サウンド: ON</button>
+        </div>
+        <div class="mission-card">
+          <div class="mission-title">🎯 現在のミッション</div>
+          <div id="mission-desc" class="mission-desc">デブリを拾って回収ボックスに運ぼう (0/5)</div>
+          <div class="contract-card">
+            <div class="contract-title">📦 時間制サルベージ契約</div>
+            <div id="contract-desc" class="contract-desc">衛星部品を3個回収 (0/3)</div>
+          </div>
+        </div>
+
+        <div id="shuttle-card">
+          <div class="shuttle-title">🚀 宇宙貨物船が停泊中！</div>
+          <div id="shuttle-order-desc" class="shuttle-order">デブリ売却額が 3倍 にアップ！</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="combo-card" class="combo-card">
+      <span id="combo-num">COMBO x0</span>
+      <span id="combo-mult">納品ボーナス +0%</span>
+      <span id="combo-time">あと5秒</span>
+    </div>
+
+    <!-- Alert Banner (Rare / Fever) -->
+    <div id="alert-banner">🚨 レアデブリ飛来中！ (+300💰)</div>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar">
+      <div class="touch-hint">
+        👆 <b>画面スワイプ</b> で自由立体移動<br>
+        🌀 <b>吸引ブースト</b> で一気に回収<br>
+        🤖 設備合体で基地が <b>巨大メガステーション</b> に！
+      </div>
+
+      <!-- Upgrades -->
+      <div class="upgrade-panel">
+        <button id="btn-pulse" class="upgrade-btn ability-btn">
+          <span>🌀 吸引ブースト</span>
+          <span id="pulse-status" class="upgrade-cost">READY</span>
+        </button>
+        <button id="btn-upgrade-speed" class="upgrade-btn">
+          <span>⚡ 移動速度 <span id="lvl-speed">Lv.1</span></span>
+          <span id="cost-speed" class="upgrade-cost">15 💰</span>
+        </button>
+        <button id="btn-upgrade-capacity" class="upgrade-btn">
+          <span>🎒 バッグ容量 <span id="lvl-capacity">Lv.1</span></span>
+          <span id="cost-capacity" class="upgrade-cost">20 💰</span>
+        </button>
+        <button id="btn-upgrade-attract" class="upgrade-btn">
+          <span>🧲 吸引範囲 <span id="lvl-attract">Lv.1</span></span>
+          <span id="cost-attract" class="upgrade-cost">15 💰</span>
+        </button>
+        <button id="btn-upgrade-drone" class="upgrade-btn" style="display: none;">
+          <span>🤖 ドローン増備 <span id="lvl-drone">1機</span></span>
+          <span id="cost-drone" class="upgrade-cost">80 💰</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="game.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+    }
+  </script>
+</body>
+</html>
