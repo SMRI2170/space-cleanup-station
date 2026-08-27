@@ -16,7 +16,7 @@
 親Issue: [#4 ゲーム性をさらに拡張する](https://github.com/SMRI2170/space-cleanup-station/issues/4)
 
 - [x] [#7 ゲーム性の受け入れ条件を決める](https://github.com/SMRI2170/space-cleanup-station/issues/7)
-- [ ] [#9 サルベージ契約を3択から選べるようにする](https://github.com/SMRI2170/space-cleanup-station/issues/9)
+- [x] [#9 サルベージ契約を3択から選べるようにする](https://github.com/SMRI2170/space-cleanup-station/issues/9)
 - [ ] [#13 契約の成功・失敗・再挑戦を明確にする](https://github.com/SMRI2170/space-cleanup-station/issues/13)
 - [ ] [#8 隕石危険イベントを1種類追加する](https://github.com/SMRI2170/space-cleanup-station/issues/8)
 - [ ] [#10 被弾ペナルティと回復地点を追加する](https://github.com/SMRI2170/space-cleanup-station/issues/10)

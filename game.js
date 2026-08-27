@@ -715,19 +715,46 @@ const CONTRACTS = [
 ];
 let contractIndex = 0;
 let activeContract = null;
-
-function startContract() {
-  const template = CONTRACTS[contractIndex % CONTRACTS.length];
-  contractIndex++;
-  activeContract = { ...template, progress: 0, timeLeft: template.time };
-}
+let contractChoices = [];
 
 function getDebrisLabel(name) {
   const type = DEBRIS_TYPES.find(item => item.name === name);
   return type ? type.label.replace(/^.*?\s/, '') : name;
 }
 
-startContract();
+function openContractSelection() {
+  activeContract = null;
+  const offset = contractIndex % CONTRACTS.length;
+  contractChoices = [0, 1, 2].map(index => ({ ...CONTRACTS[(offset + index) % CONTRACTS.length] }));
+  contractIndex++;
+  renderContractChoices();
+}
+
+function renderContractChoices() {
+  if (!contractChoicesEl) return;
+  contractChoicesEl.innerHTML = '';
+  contractChoices.forEach((choice, index) => {
+    const button = document.createElement('button');
+    button.className = 'contract-choice';
+    button.textContent = `${index + 1}. ${getDebrisLabel(choice.type)} ${choice.target}個 / ${choice.time}秒 / +${choice.reward}💰`;
+    button.addEventListener('click', event => {
+      event.stopPropagation();
+      selectContract(index);
+    });
+    contractChoicesEl.appendChild(button);
+  });
+}
+
+function selectContract(index) {
+  const choice = contractChoices[index];
+  if (!choice || activeContract) return;
+  activeContract = { ...choice, progress: 0, timeLeft: choice.time };
+  contractChoices = [];
+  renderContractChoices();
+  playUpgradeSound();
+  spawnPopup(`📦 ${getDebrisLabel(choice.type)}契約を受注！`, window.innerWidth / 2, window.innerHeight * 0.3, true);
+  updateUI();
+}
 
 function createDebrisMesh(type) {
   const group = new THREE.Group();
@@ -944,6 +971,7 @@ const capacityBarEl = document.getElementById('capacity-bar');
 const feverBarEl = document.getElementById('fever-bar');
 const missionDescEl = document.getElementById('mission-desc');
 const contractDescEl = document.getElementById('contract-desc');
+const contractChoicesEl = document.getElementById('contract-choices');
 const comboCardEl = document.getElementById('combo-card');
 const comboNumEl = document.getElementById('combo-num');
 const comboMultEl = document.getElementById('combo-mult');
@@ -963,6 +991,8 @@ function updateUI() {
 
   if (activeContract) {
     contractDescEl.textContent = `${getDebrisLabel(activeContract.type)}を${activeContract.target}個回収 (${activeContract.progress}/${activeContract.target}) 残り${Math.ceil(activeContract.timeLeft)}秒`;
+  } else {
+    contractDescEl.textContent = '契約を1つ選んで回収を開始';
   }
 
   const comboBonus = Math.min(75, Math.max(0, GAME_STATE.combo - 1) * 8);
@@ -1182,7 +1212,7 @@ function depositDebris(sourceList, fromPlayer = false) {
       GAME_STATE.credits += activeContract.reward;
       totalEarnedInSec += activeContract.reward;
       spawnPopup(`📦 契約達成! +${activeContract.reward} 💰`, window.innerWidth / 2, window.innerHeight * 0.28, true);
-      startContract();
+      openContractSelection();
     }
 
     updateUI();
@@ -1192,6 +1222,10 @@ function depositDebris(sourceList, fromPlayer = false) {
 // --- 🤖 Intelligent Auto-Play Bot System ---
 function runAutoPlayLogic(dt) {
   const maxCap = 3 + (GAME_STATE.capacityLevel - 1) * 3;
+
+  if (!activeContract && contractChoices.length > 0) {
+    selectContract(0);
+  }
 
   if (GAME_STATE.missionIndex === 1 && GAME_STATE.credits >= 20) {
     btnCap.click();
@@ -1278,7 +1312,7 @@ function animate() {
   if (activeContract) {
     activeContract.timeLeft -= dt;
     if (activeContract.timeLeft <= 0) {
-      startContract();
+      openContractSelection();
       spawnPopup('⏱ 契約更新！', window.innerWidth / 2, window.innerHeight * 0.3);
     }
   }
@@ -1507,5 +1541,6 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+openContractSelection();
 updateUI();
 animate();

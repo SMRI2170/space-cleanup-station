@@ -213,6 +213,30 @@
       margin-top: 2px;
       line-height: 1.25;
     }
+    .contract-choices {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .contract-choice {
+      width: 100%;
+      padding: 5px 7px;
+      border: 1px solid rgba(250, 204, 21, 0.45);
+      border-radius: 9px;
+      background: rgba(30, 41, 59, 0.9);
+      color: #f8fafc;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1.25;
+      text-align: left;
+      touch-action: manipulation;
+    }
+    .contract-choice:active {
+      transform: scale(0.97);
+      background: rgba(51, 65, 85, 0.95);
+    }
 
     .combo-card {
       position: absolute;
@@ -496,6 +520,7 @@
           <div class="contract-card">
             <div class="contract-title">📦 時間制サルベージ契約</div>
             <div id="contract-desc" class="contract-desc">衛星部品を3個回収 (0/3)</div>
+            <div id="contract-choices" class="contract-choices"></div>
           </div>
         </div>
 
