@@ -1,6 +1,14 @@
 # Space Cleanup Station
 
-Pizza Ready-style 2.5D isometric mobile game about collecting orbital debris, recycling it at a station, and reinvesting the credits into faster cleanup.
+Pizza Ready-style 2.5D isometric mobile game about collecting orbital debris, recycling it at a station, and reinvesting credits into faster cleanup and automation.
+
+## Play the latest main
+
+GitHub Pages preview:
+
+https://smri2170.github.io/space-cleanup-station/
+
+Every push to `main` is built with Vite and deployed from `dist/`. The Pages build is the fast browser review target; Android/iOS via Capacitor remain the release targets.
 
 ## Stack
 
@@ -9,25 +17,38 @@ Pizza Ready-style 2.5D isometric mobile game about collecting orbital debris, re
 - Vite
 - Capacitor 8
 - Offline-first; no backend required for the core game
+- GitHub Actions for build validation and Pages preview
 
 ## Current vertical slice
 
 1. Move with WASD / arrow keys or the mobile virtual stick.
 2. Approach debris to collect it automatically.
-3. Return to the `RECYCLE` station to sell cargo one item at a time.
-4. Buy speed and cargo-capacity upgrades.
-5. Progress is saved locally on the device/browser.
+3. Return to the `RECYCLE` station to process cargo.
+4. Spend credits on speed and cargo capacity.
+5. Progress is saved locally.
 
-No external art assets or network requests are required for this slice.
+## Roadmap
 
-## Run
+Current milestone: **Phaser Mobile MVP**
+
+- #27 GitHub Pages preview
+- #28 visible cargo stack + recycling conveyor
+- #29 world upgrade pads + data-driven upgrades
+- #30 worker drone automation
+- #31 mobile HUD / touch / safe areas
+- #32 save / balance / mobile performance
+- #33 Android + iOS device builds
+
+Parent roadmap: #26
+
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Production check:
+Production validation:
 
 ```bash
 npm run build
@@ -35,10 +56,9 @@ npm run build
 
 ## Native mobile
 
-Generate the native projects once:
+Generate native projects once:
 
 ```bash
-npm install
 npx cap add android
 npx cap add ios
 npm run cap:sync
@@ -51,25 +71,17 @@ npm run cap:android
 npm run cap:ios
 ```
 
-The built Vite bundle is copied into the native app (`webDir: dist`), so the core game does not require a separate web server.
+The Vite bundle is copied into the native app (`webDir: dist`), so the core game does not require a separate game server.
 
 ## Architecture
 
 ```text
 src/
-├─ entities/   # Player and debris presentation/state
-├─ game/       # save state and isometric math
-├─ scenes/     # Phaser scenes and orchestration
-├─ main.ts     # Phaser boot config
-└─ styles.css  # viewport / safe-area shell
+├─ entities/
+├─ game/
+├─ scenes/
+├─ main.ts
+└─ styles.css
 ```
 
-See `AGENTS.md` for AI-development constraints.
-
-## Next
-
-- Replace procedural shapes with a cohesive isometric art set.
-- Add worker drones and automated collection.
-- Add recycling stations and visible processing queues.
-- Add contracts and area unlocks after the core loop feels good.
-- Generate Android/iOS projects and test on real devices early.
+See `AGENTS.md`, `TASKS.md`, and `GAMEPLAY_LOOP.md` for the current development rules.
