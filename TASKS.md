@@ -1,36 +1,42 @@
 # Development tasks
 
-## P0 — playable mobile vertical slice
+Current roadmap: #26  
+Milestone: **Phaser Mobile MVP**  
+Live preview: https://smri2170.github.io/space-cleanup-station/
+
+## Current order
+
+- [x] #27 Vite build → GitHub Pages preview
+- [ ] #28 Visible cargo stack + one-by-one recycling conveyor
+- [ ] #29 World upgrade pads + data-driven upgrades
+- [ ] #30 Worker drone automation
+- [ ] #31 Mobile HUD, touch controls, safe areas
+- [ ] #32 Save robustness, balance, mobile performance
+- [ ] #33 Capacitor Android/iOS real-device build
+
+## Already available
 
 - [x] Phaser 4 + TypeScript + Vite foundation
-- [x] Capacitor 8 configuration
-- [x] Isometric world and touch/keyboard movement
-- [x] Automatic debris pickup with cargo capacity
-- [x] Base recycling and credits
-- [x] Speed / cargo upgrades
-- [x] Local save data
-- [ ] Generate `android/` and `ios/` projects on a development Mac
-- [ ] Test 10 minutes on a mid-range Android device
-- [ ] Test 10 minutes on a recent iPhone
+- [x] Capacitor configuration
+- [x] Isometric world
+- [x] Keyboard + virtual-stick movement
+- [x] Automatic debris pickup
+- [x] Cargo capacity
+- [x] Recycling / credits
+- [x] Speed and cargo upgrades
+- [x] Local save
+- [x] GitHub Actions build validation
+- [x] GitHub Pages deployment
 
-## P1 — Pizza Ready-style feel
+## After MVP
 
-- [ ] Visible cargo stack behind the player
-- [ ] Recycling conveyor with one-by-one processing animation
-- [ ] Worker drone that automates collection
-- [ ] Upgrade pads in the world instead of HUD-only purchasing
-- [ ] Haptics and pickup/sell feedback
-- [ ] Cohesive isometric art and animation set
+Only after the core 5-minute loop feels good:
 
-## P2 — progression
+- cohesive art / animation / sound
+- additional debris classes
+- orbital zones and station expansion
+- contracts and optional challenges
+- ads / IAP
+- cloud save / login / leaderboard
 
-- [ ] Three debris classes with distinct value/handling
-- [ ] Contracts and timed objectives
-- [ ] New orbital zones
-- [ ] Station expansion
-- [ ] Offline earnings only if it improves the core loop
-
-## Later
-
-- Ads / IAP only after retention is validated.
-- Cloud save, login, leaderboard, and backend are optional and must not block the offline single-player release.
+Backend features must not block the offline single-player mobile release.
