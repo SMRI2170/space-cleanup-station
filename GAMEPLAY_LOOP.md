@@ -1,42 +1,47 @@
-# ゲームループ仕様
+# Gameplay loop
 
-## 目標
+## Core loop
 
-プレイヤーが5分間、次の行動を繰り返して楽しめる状態にする。
+The MVP is intentionally smaller than the previous Three.js / Unity designs.
 
 ```text
-契約を選ぶ
-  -> デブリを探す
-  -> 危険を避けながら回収する
-  -> コンボを維持して納品する
-  -> 報酬で設備を強化する
-  -> より難しい契約を選ぶ
+explore
+  → collect debris automatically
+  → cargo visibly stacks
+  → return to the station
+  → process debris one item at a time
+  → earn credits
+  → buy an upgrade in the world
+  → unlock automation
+  → collect faster
 ```
 
-## プレイヤーの判断
+## First 5 minutes
 
-- どのサルベージ契約を受けるか
-- 安全なルートと危険な近道のどちらを通るか
-- 吸引ブーストをいつ使うか
+The player should understand the game without a long tutorial:
 
-## 成功
+1. Move and collect the first debris.
+2. Notice cargo capacity.
+3. Return to RECYCLE and watch cargo become credits.
+4. Buy a first upgrade.
+5. Repeat faster.
+6. Work toward the first automated drone.
 
-- 制限時間内に契約の目標数を納品する
-- 報酬を受け取り、次の契約を選べる
-- 施設やアップグレードで次の回収が有利になる
+## Primary decisions
 
-## 失敗
+Keep the MVP to a few readable decisions:
 
-- 制限時間が切れる
-- 失敗内容と不足数を表示する
-- 進行済みの恒久アップグレードは失わない
-- 再挑戦または別契約を選べる
+- continue collecting or return to recycle
+- which upgrade to buy next
+- manual collection versus investing in automation
 
-## 最初の縦切りの完了条件
+## MVP success criteria
 
-- スマホで契約を1つ選択できる
-- 契約の残り時間と進捗が常に分かる
-- 成功時に報酬が1回だけ付与される
-- 失敗時に報酬が付与されない
-- 結果後に次の契約へ進める
-- 回収、納品、アップグレードが壊れていない
+- The loop works offline.
+- Collection, cargo, recycling, credits, upgrades and automation are visually connected.
+- A first-time player can make progress within one minute.
+- Meaningful automation is reachable in roughly five minutes after balancing.
+- The same core loop is playable on GitHub Pages and in Capacitor mobile builds.
+- Mobile UI never requires precise mouse-like input.
+
+Contracts, hazards, multiple orbital areas, cloud accounts, ads and IAP are post-MVP.
