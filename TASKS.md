@@ -61,3 +61,14 @@ Only after the core loop feels good:
 - cloud save / login / leaderboard
 
 Backend features must not block the offline single-player mobile release.
+
+
+## Art quality pass
+
+- [ ] #34 realistic low-poly debris sprites
+- [ ] #35 astronaut worker sprite
+- [ ] #36 modular recycling station art
+- [ ] #37 autonomous cleanup drone art
+
+Source of truth: `ART_DIRECTION.md`.
+Runtime stays 2.5D; do not move the MVP to realtime 3D.
