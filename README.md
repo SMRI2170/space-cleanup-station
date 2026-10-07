@@ -1,43 +1,75 @@
 # Space Cleanup Station
 
-宇宙ステーション周辺のデブリを回収し、基地を拡張していくThree.js製の3Dゲームです。
+Pizza Ready-style 2.5D isometric mobile game about collecting orbital debris, recycling it at a station, and reinvesting the credits into faster cleanup.
 
-## Features
+## Stack
 
-- PC: WASD / 矢印キーで移動
-- Mobile: 画面スワイプで移動
-- デブリ自動吸引と回収ボックスへの納品
-- コンボ納品ボーナス
-- 時間制サルベージ契約
-- 吸引ブースト
-- 基地設備、ドローン、FEVERモード
-- PWA対応
+- Phaser 4.2.1
+- TypeScript
+- Vite
+- Capacitor 8
+- Offline-first; no backend required for the core game
 
-## Run locally
+## Current vertical slice
 
-ブラウザのセキュリティ制限を避けるため、ローカルHTTPサーバー経由で起動します。
+1. Move with WASD / arrow keys or the mobile virtual stick.
+2. Approach debris to collect it automatically.
+3. Return to the `RECYCLE` station to sell cargo one item at a time.
+4. Buy speed and cargo-capacity upgrades.
+5. Progress is saved locally on the device/browser.
+
+No external art assets or network requests are required for this slice.
+
+## Run
 
 ```bash
-python3 -m http.server 8000
+npm install
+npm run dev
 ```
 
-その後、`http://localhost:8000` を開きます。
+Production check:
 
-Three.jsは現在CDNから読み込んでいるため、起動時にインターネット接続が必要です。
+```bash
+npm run build
+```
 
-## Project files
+## Native mobile
 
-- `index.html`: UI、PWA設定、スマホ向けレイアウト
-- `game.js`: Three.jsシーン、ゲームループ、ゲームシステム
-- `manifest.webmanifest`: ホーム画面追加用マニフェスト
-- `sw.js`: PWAキャッシュ設定
-- `icon.svg`: アプリアイコン
-- `TASKS.md`: 開発タスクと優先順位
-- `DEVELOPMENT_LOOP.md`: 1件ずつ完成させる開発ルール
-- `GAMEPLAY_LOOP.md`: 5分プレイのゲームループ仕様
+Generate the native projects once:
 
-## Development
+```bash
+npm install
+npx cap add android
+npx cap add ios
+npm run cap:sync
+```
 
-開発はGitHub Issuesの小タスクを1件ずつ進めます。実装、チェック、スマホでの5分プレイ、結果の記録まで終えてから次のタスクへ進みます。
+Run on device/emulator:
 
-詳細は[`DEVELOPMENT_LOOP.md`](DEVELOPMENT_LOOP.md)を参照してください。
+```bash
+npm run cap:android
+npm run cap:ios
+```
+
+The built Vite bundle is copied into the native app (`webDir: dist`), so the core game does not require a separate web server.
+
+## Architecture
+
+```text
+src/
+├─ entities/   # Player and debris presentation/state
+├─ game/       # save state and isometric math
+├─ scenes/     # Phaser scenes and orchestration
+├─ main.ts     # Phaser boot config
+└─ styles.css  # viewport / safe-area shell
+```
+
+See `AGENTS.md` for AI-development constraints.
+
+## Next
+
+- Replace procedural shapes with a cohesive isometric art set.
+- Add worker drones and automated collection.
+- Add recycling stations and visible processing queues.
+- Add contracts and area unlocks after the core loop feels good.
+- Generate Android/iOS projects and test on real devices early.

@@ -1,13 +1,9 @@
-.DS_Store
 node_modules/
 dist/
-build/
-.env
-.env.*
-!.env.example
+.DS_Store
 *.log
-
-# Native build output
-ios/App/Pods/
+.vscode/
+.idea/
 android/.gradle/
-android/app/build/
+android/local.properties
+ios/App/Pods/
