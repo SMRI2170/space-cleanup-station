@@ -133,3 +133,15 @@ Parent: #56
 - [ ] #69 returning-player recap
 
 Progress is play-based, not calendar-locked. No required login streaks.
+
+
+### First-hour detailed design
+- [ ] #70 progression state + Save v3 migration
+- [ ] #71 first 90 seconds: movement + pickup
+- [ ] #72 1–5 min: first return + first upgrade
+- [ ] #73 5–10 min: independent second loop + broken drone reveal
+- [ ] #74 10–30 min: drone repair + first automation
+- [ ] #75 30–60 min: contracts + Archive staged unlock
+- [ ] #76 progression debug HUD
+
+Source of truth: `docs/FIRST_HOUR_DESIGN.md`.
