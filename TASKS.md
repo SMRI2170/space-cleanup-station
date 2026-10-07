@@ -62,13 +62,42 @@ Only after the core loop feels good:
 
 Backend features must not block the offline single-player mobile release.
 
-
 ## Art quality pass
 
-- [ ] #34 realistic low-poly debris sprites
-- [ ] #35 astronaut worker sprite
-- [ ] #36 modular recycling station art
-- [ ] #37 autonomous cleanup drone art
+### Foundation
+- [ ] #38 2.5D asset loading / metadata / fallback
+
+### Debris — parent #34
+- [ ] #39 optimize 4 debris assets to WebP
+- [ ] #40 integrate debris sprites into Phaser
+- [ ] #41 finish pickup / cargo presentation
+
+### Player — parent #35
+- [ ] #42 integrate astronaut base sprite
+- [ ] #43 movement / thruster presentation
+- [ ] #44 cargo attachment presentation
+
+### Station — parent #36
+- [ ] #45 platform + recycling core
+- [ ] #46 intake + conveyor
+- [ ] #47 processor + output flow
+- [ ] #48 drone dock
+- [ ] #49 visual upgrade modules
+
+### Drone — parent #37
+- [ ] #50 integrate cleanup drone sprite
+- [ ] #51 visualize collect / return / dock states
+
+### World / feedback
+- [ ] #52 orbital environment art
+- [ ] #53 station decorative props
+- [ ] #54 shared gameplay VFX
+
+### Final QA
+- [ ] #55 mobile texture budget + art QA
 
 Source of truth: `ART_DIRECTION.md`.
 Runtime stays 2.5D; do not move the MVP to realtime 3D.
+
+Recommended order:
+`#38 → #39-#51 → #54 → #52/#53 → #55`.
