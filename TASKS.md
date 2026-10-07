@@ -101,3 +101,35 @@ Runtime stays 2.5D; do not move the MVP to realtime 3D.
 
 Recommended order:
 `#38 → #39-#51 → #54 → #52/#53 → #55`.
+
+
+## Month 1 progression
+
+Parent: #56
+
+### Phase 1 — Station Restart
+- [ ] #57 onboarding: collect → process → upgrade
+- [ ] #68 5 / 15 / 30 minute pacing
+- [ ] #58 broken drone repair goal
+
+### Phase 2 — First Business
+- [ ] #59 contracts
+- [ ] #60 Orbital Archive
+- [ ] #61 rarity system
+
+### Phase 3 — Orbital Company
+- [ ] #62 3-stage station expansion
+- [ ] #63 3-stage processor evolution
+- [ ] #64 chapter events
+
+### Phase 4 — Unknown Debris
+- [ ] #65 UNKNOWN debris story chain
+
+### Phase 5 — ORBITAL CLEANUP
+- [ ] #66 multi-stage giant satellite salvage
+- [ ] #67 High Orbit License
+
+### Retention UX
+- [ ] #69 returning-player recap
+
+Progress is play-based, not calendar-locked. No required login streaks.
