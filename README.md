@@ -25,7 +25,9 @@ Every push to `main` is built with Vite and deployed from `dist/`. The Pages bui
 2. Approach debris to collect it automatically.
 3. Return to the `RECYCLE` station to process cargo.
 4. Spend credits on speed and cargo capacity.
-5. Progress is saved locally.
+5. Unlock automation through the broken-drone repair progression.
+6. Contracts, Archive collection, station growth, and the Month 1 salvage arc expand the loop.
+7. Progress is saved locally.
 
 ## Roadmap
 
@@ -40,6 +42,19 @@ Current milestone: **Phaser Mobile MVP**
 - #33 Android + iOS device builds
 
 Parent roadmap: #26
+
+## Design sources
+
+This repository is intended to be understandable without prior chat history.
+
+- `GAME_DESIGN.md` — primary gameplay source of truth
+- `ART_DIRECTION.md` — 2.5D visual and asset direction
+- `docs/FIRST_HOUR_DESIGN.md` — 0–60 minute player experience
+- `docs/PROGRESSION_MODEL.md` — unlock graph, typed progression states, and Save v3 target
+- `AGENTS.md` — mandatory AI implementation rules and reading order
+- `TASKS.md` — current implementation sequence
+
+Month 1 progression parent: **#56**.
 
 ## Run locally
 
