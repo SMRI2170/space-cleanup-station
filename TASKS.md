@@ -145,3 +145,26 @@ Progress is play-based, not calendar-locked. No required login streaks.
 - [ ] #76 progression debug HUD
 
 Source of truth: `docs/FIRST_HOUR_DESIGN.md`.
+
+
+## Month 1 implementation order
+
+1. [ ] #70 Month 1 progression state + Save v3
+2. [ ] #76 Progression Debug HUD
+3. [ ] #71 0〜90秒: 移動 + 最初の回収
+4. [ ] #72 1〜5分: 初帰還 + 初処理 + 初Upgrade
+5. [ ] #73 5〜10分: 2周目 + Broken Drone提示
+6. [ ] #74 10〜30分: Drone修復 + 初自動化
+7. [ ] #75 30〜60分: Contract + Archive段階解放
+8. [ ] #59 通常Contract pool
+9. [ ] #60 Orbital Archive本実装
+10. [ ] #61 Common〜Relic rarity
+11. [ ] #62 基地Tier 1→2→3拡張
+12. [ ] #63 Processor 3段階進化
+13. [ ] #64 Chapterイベント/短い通信
+14. [ ] #69 Returning Player導線
+15. [ ] #65 UNKNOWNデブリ収集チェーン
+16. [ ] #66 ORBITAL CLEANUP大型サルベージ
+17. [ ] #67 High Orbit License
+
+Rule: complete each player-facing step on GitHub Pages before moving to the next unless the next item is only a non-blocking art task.
