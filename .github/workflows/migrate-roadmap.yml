@@ -1,0 +1,23 @@
+name: Migrate roadmap metadata
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/migrate-roadmap.yml
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rename mobile milestone for Phaser stack
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method PATCH "repos/$GITHUB_REPOSITORY/milestones/2" \
+            -f title="Phaser Mobile MVP" \
+            -f description="Phaser 4 + TypeScript + Vite + Capacitor 8で、GitHub Pages上の継続プレビューとAndroid/iOS実機版を同じコードベースから完成させる。コアループ、Pizza Ready風の搬送・自動化、モバイルUI、ローカル保存、性能確認、実機5分プレイまでを対象とする。"
