@@ -7,35 +7,56 @@ Live preview: https://smri2170.github.io/space-cleanup-station/
 ## Current order
 
 - [x] #27 Vite build → GitHub Pages preview
-- [ ] #28 Visible cargo stack + one-by-one recycling conveyor
-- [ ] #29 World upgrade pads + data-driven upgrades
-- [ ] #30 Worker drone automation
+- [x] #28 Visible cargo stack + one-by-one recycling conveyor
+- [x] #29 World upgrade pads + data-driven upgrades
+- [x] #30 Worker drone automation
 - [ ] #31 Mobile HUD, touch controls, safe areas
 - [ ] #32 Save robustness, balance, mobile performance
 - [ ] #33 Capacitor Android/iOS real-device build
 
-## Already available
+## Current playable slice
 
-- [x] Phaser 4 + TypeScript + Vite foundation
-- [x] Capacitor configuration
-- [x] Isometric world
-- [x] Keyboard + virtual-stick movement
-- [x] Automatic debris pickup
-- [x] Cargo capacity
-- [x] Recycling / credits
-- [x] Speed and cargo upgrades
-- [x] Local save
-- [x] GitHub Actions build validation
-- [x] GitHub Pages deployment
+- isometric orbital cleanup field
+- mobile virtual stick + WASD/arrow controls
+- four debris rarity/value classes
+- visible cargo stack on the player
+- magnetic pickup range visualization
+- animated one-by-one recycling processor
+- credits and persistent progression
+- in-world upgrade pads for thrust, cargo, magnet and processor
+- unlockable/upgradable autonomous collection drone
+- objective HUD and pickup/reward feedback
+- local save v2 with legacy save migration
+- GitHub Pages auto-preview
+
+## Next quality pass
+
+### #31 Mobile presentation
+- tune HUD for small phone aspect ratios
+- landscape safe-area verification on iPhone/Android
+- prevent UI/game-input conflicts
+- add optional haptic feedback through Capacitor
+
+### #32 Stability / feel
+- 5-minute economy balance
+- low/mid-range mobile performance budget
+- cap visual effects and active debris
+- save corruption / migration checks
+- tune drone versus manual collection value
+
+### #33 Native validation
+- generate Android/iOS native projects
+- offline real-device test
+- resume/save restoration test
+- record device/OS/build results
 
 ## After MVP
 
-Only after the core 5-minute loop feels good:
+Only after the core loop feels good:
 
-- cohesive art / animation / sound
-- additional debris classes
-- orbital zones and station expansion
-- contracts and optional challenges
+- authored isometric art / animation / sound
+- additional orbital zones and station expansion
+- contracts and optional hazards
 - ads / IAP
 - cloud save / login / leaderboard
 
