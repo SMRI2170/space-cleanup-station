@@ -15,5 +15,5 @@
     "noFallthroughCasesInSwitch": true,
     "noEmit": true
   },
-  "include": ["src", "vite.config.ts", "capacitor.config.ts"]
+  "include": ["app", "src", "vite.config.ts", "capacitor.config.ts"]
 }
