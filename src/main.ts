@@ -2,10 +2,9 @@ import Phaser from 'phaser';
 import './styles.css';
 import { GameScene } from './scenes/GameScene';
 
-const config: Phaser.Types.Core.GameConfig = {
+new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
-  backgroundColor: '#07111f',
   width: 1280,
   height: 720,
   scene: [GameScene],
@@ -15,13 +14,5 @@ const config: Phaser.Types.Core.GameConfig = {
     width: 1280,
     height: 720,
   },
-  input: {
-    activePointers: 2,
-  },
-  render: {
-    antialias: true,
-    pixelArt: false,
-  },
-};
-
-new Phaser.Game(config);
+  input: { activePointers: 2 },
+});

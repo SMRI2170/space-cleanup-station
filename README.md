@@ -1,102 +1,29 @@
-# Space Cleanup Station
+# Space Cleanup Station — Clean Rebuild
 
-Pizza Ready-style 2.5D isometric mobile game about collecting orbital debris, recycling it at a station, and reinvesting credits into faster cleanup and automation.
+The experimental gameplay implementation was reset on 2026-10-13 to reduce complexity.
 
-## Play the latest main
+Old implementation (restorable): [backup/pre-clean-rebuild-2026-10-13](https://github.com/SMRI2170/space-cleanup-station/tree/backup/pre-clean-rebuild-2026-10-13).
 
-GitHub Pages preview:
+## Current implementation
 
-https://smri2170.github.io/space-cleanup-station/
+Minimal Phaser bootstrap, a station marker, basic keyboard and touch movement. Debris, cargo, credits, upgrades, drone, save and progression are **not yet implemented on main**.
 
-Every push to `main` is built with Vite and deployed from `dist/`. The Pages build is the fast browser review target; Android/iOS via Capacitor remain the release targets.
+## Design documents
+- `GAME_DESIGN.md` — complete game vision
+- `ART_DIRECTION.md` — visual direction
+- `docs/FIRST_HOUR_DESIGN.md` — first-hour experience
+- `docs/PROGRESSION_MODEL.md` — save/unlock target
+- `AGENTS.md` — AI rules
+- `TASKS.md` — clean rebuild sequence
 
-## Stack
-
-- Phaser 4.2.1
-- TypeScript
-- Vite
-- Capacitor 8
-- Offline-first; no backend required for the core game
-- GitHub Actions for build validation and Pages preview
-
-## Current vertical slice
-
-1. Move with WASD / arrow keys or the mobile virtual stick.
-2. Approach debris to collect it automatically.
-3. Return to the `RECYCLE` station to process cargo.
-4. Spend credits on speed and cargo capacity.
-5. Unlock automation through the broken-drone repair progression.
-6. Contracts, Archive collection, station growth, and the Month 1 salvage arc expand the loop.
-7. Progress is saved locally.
-
-## Roadmap
-
-Current milestone: **Phaser Mobile MVP**
-
-- #27 GitHub Pages preview
-- #28 visible cargo stack + recycling conveyor
-- #29 world upgrade pads + data-driven upgrades
-- #30 worker drone automation
-- #31 mobile HUD / touch / safe areas
-- #32 save / balance / mobile performance
-- #33 Android + iOS device builds
-
-Parent roadmap: #26
-
-## Design sources
-
-This repository is intended to be understandable without prior chat history.
-
-- `GAME_DESIGN.md` — primary gameplay source of truth
-- `ART_DIRECTION.md` — 2.5D visual and asset direction
-- `docs/FIRST_HOUR_DESIGN.md` — 0–60 minute player experience
-- `docs/PROGRESSION_MODEL.md` — unlock graph, typed progression states, and Save v3 target
-- `AGENTS.md` — mandatory AI implementation rules and reading order
-- `TASKS.md` — current implementation sequence
-
-Month 1 progression parent: **#56**.
-
-## Run locally
+## Run
 
 ```bash
 npm install
+npm run build
 npm run dev
 ```
 
-Production validation:
+Preview: https://smri2170.github.io/space-cleanup-station/preview/
 
-```bash
-npm run build
-```
-
-## Native mobile
-
-Generate native projects once:
-
-```bash
-npx cap add android
-npx cap add ios
-npm run cap:sync
-```
-
-Run on device/emulator:
-
-```bash
-npm run cap:android
-npm run cap:ios
-```
-
-The Vite bundle is copied into the native app (`webDir: dist`), so the core game does not require a separate game server.
-
-## Architecture
-
-```text
-src/
-├─ entities/
-├─ game/
-├─ scenes/
-├─ main.ts
-└─ styles.css
-```
-
-See `AGENTS.md`, `TASKS.md`, and `GAMEPLAY_LOOP.md` for the current development rules.
+Reimplement one gameplay responsibility at a time; do not paste the original GameScene wholesale.
